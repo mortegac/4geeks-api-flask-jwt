@@ -29,6 +29,18 @@ def handle_hello():
     return jsonify(response_body), 200
 
 
+@api.route('/hash', methods=['POST', 'GET'])
+def handle_hash():
+    
+    expiracion = datetime.timedelta(days=3)
+    access_token = create_access_token(identity='mortega@4geeks.co', expires_delta=expiracion)
+    response_token = {
+        "users": "Manu",
+        "token": access_token
+    }
+
+    return jsonify(response_token), 200
+
 
 @api.route('/login', methods=['POST'])
 def login():
@@ -43,26 +55,28 @@ def login():
         return jsonify({"msg":"Password required"}), 400
     
     user = User.query.filter_by(email=email).first()
+    print(user)
+
     if not user:
         return jsonify({"msg": "The email is not correct",
         "status": 401
         
         }), 401
-    if not check_password_hash(user.password, password):
-         return jsonify({"msg": "The password is not correct",
-        "status": 401
-        }), 400
+    # if not check_password_hash(user.password, password):
+    #      return jsonify({"msg": "The password is not correct",
+    #     "status": 401
+    #     }), 400
 
     expiracion = datetime.timedelta(days=3)
     access_token = create_access_token(identity=user.email, expires_delta=expiracion)
 
     data = {
-            "user": user.serialize(),
-            "token": access_token,
-            "expires": expiracion.total_seconds()*1000,
-            "userId": user.id,
-            "username": user.username
-        }
+        "user": user.serialize(),
+        "token": access_token,
+        "expires": expiracion.total_seconds()*1000,
+        "userId": user.id,
+        "username": user.username
+    }
 
 
     return jsonify(data), 200
