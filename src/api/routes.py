@@ -11,14 +11,8 @@ import datetime
 api = Blueprint('api', __name__)
 
 
-# @api.route('/hello', methods=['POST', 'GET'])
-# def handle_hello():
-
-#     response_body = {
-#         "message": "Hello! I'm a message that came from the backend"
-#     }
-
-@api.route('/hello', methods=['POST', 'GET'])
+@api.route('/users', methods=['POST', 'GET'])
+# @jwt_required()
 def handle_hello():
     users = User.query.all()
     users = list(map(lambda x: x.serialize(), users))
@@ -28,15 +22,20 @@ def handle_hello():
 
     return jsonify(response_body), 200
 
-
 @api.route('/hash', methods=['POST', 'GET'])
 def handle_hash():
     
     expiracion = datetime.timedelta(days=3)
     access_token = create_access_token(identity='mortega@4geeks.co', expires_delta=expiracion)
+
+    # Crear password
+    password = '123456'
+    password=generate_password_hash(password, method='sha256')
+
     response_token = {
         "users": "Manu",
-        "token": access_token
+        "token": access_token,
+        "password": password
     }
 
     return jsonify(response_token), 200
@@ -62,10 +61,13 @@ def login():
         "status": 401
         
         }), 401
-    # if not check_password_hash(user.password, password):
-    #      return jsonify({"msg": "The password is not correct",
-    #     "status": 401
-    #     }), 400
+
+    # password=generate_password_hash(password, method='sha256')
+
+    if not check_password_hash(user.password, password):
+         return jsonify({"msg": "The password is not correct",
+        "status": 401
+        }), 400
 
     expiracion = datetime.timedelta(days=3)
     access_token = create_access_token(identity=user.email, expires_delta=expiracion)
@@ -106,7 +108,8 @@ def register():
     user.email = email
     # user.is_active= True
     user.username = username
-    hashed_password = generate_password_hash(password)
+    hashed_password=generate_password_hash(password, method='sha256')
+
     user.password = hashed_password
     print(user)
     db.session.add(user)

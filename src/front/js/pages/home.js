@@ -1,6 +1,7 @@
 import React, { useContext, useState, useEffect } from "react";
 import { Context } from "../store/appContext";
-import rigoImageUrl from "../../img/rigo-baby.jpg";
+import llamaFea from "../../img/llama-fea.jpg";
+import llama from "../../img/llama.jpeg";
 import "../../styles/home.scss";
 
 export const Home = () => {
@@ -28,10 +29,7 @@ export const Home = () => {
 					<div className="text-center mt-5">
 						{/* <span>User: {JSON.stringify(store.user)}</span> */}
 						<div className="card" style={{ width: "18rem" }}>
-							<img
-								className="card-img-top"
-								src="https://cdn.generadormemes.com/media/templates/xllama_fea.jpg.pagespeed.ic.plantilla-memes.jpg"
-							/>
+							<img className="card-img-top" src={llama} />
 							<div className="card-body">
 								<span>User: {JSON.stringify(store.user)}</span>
 							</div>
@@ -63,8 +61,17 @@ export const Home = () => {
 							<button type="submit" onClick={e => handlerClick(e)} className="btn btn-primary">
 								Submit
 							</button>
-							{store.user !== "" ? (
-								<div className="alert alert-info overflow-auto">{JSON.stringify(store.user.token)}</div>
+
+							<div className="text-danger overflow-auto my-5">{store.message}</div>
+
+							{store.userList.length > 0 ? (
+								<div className="alert alert-info overflow-auto">
+									<ul>
+										{store.userList.map((item, index) => (
+											<li key={index}>{item.email}</li>
+										))}
+									</ul>
+								</div>
 							) : null}
 						</form>
 					</div>

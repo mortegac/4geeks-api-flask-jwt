@@ -1,0 +1,41 @@
+@host=https://3001-blush-giraffe-5n4xdyte.ws-us11.gitpod.io/api
+
+
+### REGISTER
+POST {{host}}/register
+Content-Type: application/json
+
+{
+    "email":"la@guagua.cl",
+    "password":"87654321",
+    "username":"guagua"
+}
+
+# {
+#     "email":"hola@ortega.cl",
+#     "password":"87654321",
+#     "username":"manu"
+# }
+
+
+
+###  @AUTH
+# @name authSession
+POST {{host}}/login
+Content-Type: application/json
+
+{
+    "email":"hola@ortega.cl",
+    "password":"87654321"
+}
+
+###
+@token = {{authSession.response.body.$.token}}
+
+
+
+### USER
+GET {{host}}/users
+Content-Type: application/json
+Authorization: Bearer {{token}}
+

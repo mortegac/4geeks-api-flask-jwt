@@ -8,7 +8,9 @@ const getState = ({ getStore, getActions, setStore }) => {
 				email: "",
 				userId: "",
 				userName: ""
-			}
+			},
+			message: "",
+			userList: []
 		},
 
 		actions: {
@@ -41,22 +43,36 @@ const getState = ({ getStore, getActions, setStore }) => {
 					.then(resp => resp.json())
 					.then(data => {
 						console.log("--data--", data);
-						setStore({ user: data });
+						if (data.hasOwnProperty("token")) {
+							const dataUser = {
+								expires: data.expires,
+								token: data.token,
+								username: data.username,
+								email: data.user.email,
+								userId: data.userId,
+								userName: data.userName
+							};
+							setStore({ user: { ...dataUser } });
 
-						if (typeof Storage !== "undefined") {
-							localStorage.setItem("token", data.token);
-							localStorage.setItem("user", JSON.stringify(data.user));
+							console.log("--USER--", dataUser);
+
+							if (typeof Storage !== "undefined") {
+								localStorage.setItem("token", data.token);
+								localStorage.setItem("user", JSON.stringify(data.user));
+							} else {
+								// LocalStorage no soportado en este navegador
+							}
 						} else {
-							// LocalStorage no soportado en este navegador
+							setStore({ message: data.msg });
 						}
 					})
 					.catch(error => console.log("Error loading message from backend", error));
 			},
 
 			getMessage: () => {
-				fetch(process.env.BACKEND_URL + "/api/hello")
+				fetch(process.env.BACKEND_URL + "/api/users")
 					.then(resp => resp.json())
-					.then(data => setStore({ message: data.message }))
+					.then(data => setStore({ userList: [...data.users] }))
 					.catch(error => console.log("Error loading message from backend", error));
 			}
 
