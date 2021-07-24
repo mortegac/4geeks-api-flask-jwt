@@ -1,3 +1,43 @@
+## COMO INICIAR
+
+- Crear el entorno
+```
+pipenv shell
+```
+- Instalar dependencias 
+```
+pipenv install
+```
+
+- Crear las migraciones
+```
+pipenv run init
+pipenv run migrate
+pipenv run upgrade
+```
+
+- Ejecutar la API
+```
+pipenv run start
+```
+
+- Ejecutar Front
+```
+npm install
+npm run start
+```
+
+- Para usar REQUEST.http
+
+```
+- Cambiar la variable @host según la URl que nos entrega GITPOD
+- Crear usuario (Recordar que la Base de datos esta Vacia)
+
+```
+
+
+
+
 # WebApp boilerplate with React JS
 [![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io#https://github.com/mortegac/4geeks-api-flask-jwt)
 
