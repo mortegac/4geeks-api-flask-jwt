@@ -12,10 +12,12 @@ export const Home = () => {
 	const handlerClick = e => {
 		e.preventDefault();
 
-		actions.setLogin({
+        const user= {
 			email: email,
 			password: password
-		});
+		}
+
+		actions.setLogin(user);
 	};
 
 	useEffect(() => {

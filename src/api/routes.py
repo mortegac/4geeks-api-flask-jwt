@@ -12,7 +12,7 @@ api = Blueprint('api', __name__)
 
 
 @api.route('/users', methods=['POST', 'GET'])
-# @jwt_required()
+@jwt_required()
 def handle_hello():
     users = User.query.all()
     users = list(map(lambda x: x.serialize(), users))
@@ -25,7 +25,8 @@ def handle_hello():
 @api.route('/hash', methods=['POST', 'GET'])
 def handle_hash():
     
-    expiracion = datetime.timedelta(days=3)
+    # Genera token
+    expiracion = datetime.timedelta(days=3) #  Genera una fecha en UTC
     access_token = create_access_token(identity='mortega@4geeks.co', expires_delta=expiracion)
 
     # Crear password
@@ -117,9 +118,9 @@ def register():
 
     response = {
         "msg": "Added successfully",
-        "username": username
+        "pasword": hashed_password
     }
-    return jsonify(response), 200
+    return jsonify(response), 201
 
 
     return jsonify(response_body), 200
